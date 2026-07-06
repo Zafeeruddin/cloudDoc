@@ -1,0 +1,6 @@
+sqlalchemy==2.0.41
+psycopg[binary]==3.2.9
+boto3==1.39.4
+pydantic-settings==2.10.1
+pypdf==5.8.0
+
