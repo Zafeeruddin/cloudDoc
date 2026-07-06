@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: backend
   namespace: docops
-  labels:
-    app: backend
 spec:
   replicas: 2
   selector:
@@ -25,9 +23,9 @@ spec:
               name: http
           envFrom:
             - configMapRef:
-                name: docops-backend-config
+                name: docops-config
             - secretRef:
-                name: docops-backend-secrets
+                name: docops-secrets
           resources:
             requests:
               cpu: 200m
@@ -40,11 +38,24 @@ spec:
               path: /health
               port: http
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 15
           livenessProbe:
             httpGet:
               path: /health
               port: http
             initialDelaySeconds: 20
             periodSeconds: 20
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: docops
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http

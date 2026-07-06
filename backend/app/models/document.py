@@ -10,6 +10,7 @@ from app.db.base import Base
 
 
 class DocumentStatus(str, enum.Enum):
+    PENDING_UPLOAD = "PENDING_UPLOAD"
     UPLOADED = "UPLOADED"
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
@@ -41,4 +42,3 @@ class Document(Base):
 
     user = relationship("User", back_populates="documents")
     processing_jobs = relationship("ProcessingJob", back_populates="document", cascade="all, delete-orphan")
-

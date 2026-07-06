@@ -21,6 +21,9 @@ export default function LoginPage() {
         <p className="muted">
           This form simulates the identity propagated by API Gateway and the Lambda authorizer.
         </p>
+        <p className="muted">
+          Token format: <code>docops:&lt;user-id&gt;:&lt;email&gt;:&lt;display-name&gt;</code>
+        </p>
 
         <div className="field">
           <label htmlFor="userId">User ID</label>

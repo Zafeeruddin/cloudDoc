@@ -1,7 +1,6 @@
+import json
 from functools import lru_cache
 from typing import List
-
-import json
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -27,6 +26,7 @@ class Settings(BaseSettings):
 
     presigned_url_ttl_seconds: int = 900
     max_upload_size_bytes: int = 10 * 1024 * 1024
+    allowed_file_extensions: List[str] = Field(default_factory=lambda: [".pdf", ".txt", ".md", ".csv", ".json"])
     allowed_content_types: List[str] = Field(
         default_factory=lambda: [
             "application/pdf",
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    @field_validator("allowed_content_types", "cors_allowed_origins", mode="before")
+    @field_validator("allowed_content_types", "allowed_file_extensions", "cors_allowed_origins", mode="before")
     @classmethod
     def parse_list_env(cls, value):
         if isinstance(value, list):

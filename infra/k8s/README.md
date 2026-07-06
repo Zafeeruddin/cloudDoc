@@ -1,12 +1,31 @@
-# Kubernetes Manifests
+# DocOps Kubernetes Manifests
 
-These manifests deploy DocOps into the `docops` namespace with separate Deployments for the frontend, backend, and worker.
+Apply the manifests after you have:
 
-## Notes
+1. Built and pushed the three container images.
+2. Installed the AWS Load Balancer Controller in the cluster.
+3. Replaced placeholder values in `configmap.yaml`, `secret.example.yaml`, and `serviceaccounts.yaml`.
 
-- Replace placeholder image names with your published images.
-- Replace `subnet-*` placeholders with the public and private subnets created by Terraform.
-- Set the IRSA role annotations on `backend-sa` and `worker-sa` to the IAM roles created for S3/SQS access.
-- The backend ingress is intentionally `internal` so API Gateway can target the ALB through a VPC Link.
-- The frontend ingress is public so users can reach the React app directly through Route53.
-- Apply the namespace, config, secret, service account, deployment, service, ingress, and HPA manifests in that order.
+Key points:
+
+- Namespace: `docops`
+- Backend ingress: internal ALB for API Gateway to target
+- Frontend ingress: internet-facing ALB for browser access
+- Backend and worker use IRSA through `backend-sa` and `worker-sa`
+- Secrets intentionally contain only the database URL; AWS access should come from IRSA
+- Frontend reads `VITE_API_BASE_URL` at container start and exposes `/healthz`
+
+Deploy:
+
+```bash
+kubectl apply -k infra/k8s
+```
+
+Useful follow-up checks:
+
+```bash
+kubectl get all -n docops
+kubectl get ingress -n docops
+kubectl logs deploy/backend -n docops
+kubectl logs deploy/worker -n docops
+```

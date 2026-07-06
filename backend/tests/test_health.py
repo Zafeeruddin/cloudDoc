@@ -1,11 +1,17 @@
-from fastapi.testclient import TestClient
+from app.api.routes import healthcheck
+from app.core.config import Settings
 
-from app.main import app
+
+class FakeDB:
+    def execute(self, _query):
+        return None
 
 
 def test_health_endpoint():
-    client = TestClient(app)
-    response = client.get("/health")
-    assert response.status_code == 200
-    payload = response.json()
-    assert payload["status"] == "ok"
+    response = healthcheck(
+        db=FakeDB(),
+        settings=Settings(aws_sqs_queue_url="https://example.com/docops-processing"),
+    )
+    assert response.status == "ok"
+    assert response.database == "ok"
+    assert response.queue == "configured"

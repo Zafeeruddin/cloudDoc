@@ -1,0 +1,14 @@
+project_name       = "docops"
+environment        = "dev"
+aws_region         = "us-east-1"
+route53_zone_name  = "example.com"
+frontend_domain_name = "app.example.com"
+api_custom_domain_name = "api.example.com"
+acm_certificate_arn   = "arn:aws:acm:us-east-1:123456789012:certificate/replace-me"
+
+# Fill these after the Kubernetes ingresses create the ALBs.
+frontend_alb_dns_name        = "k8s-docops-frontend-1234567890.us-east-1.elb.amazonaws.com"
+frontend_alb_zone_id         = "Z35SXDOTRQ7X7K"
+backend_alb_listener_arn     = "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/k8s-docops-backend/1234567890abcdef/abcdef1234567890"
+backend_alb_security_group_id = "sg-0123456789abcdef0"
+

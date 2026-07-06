@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL =
+  window.__DOCOPS_CONFIG__?.API_BASE_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8000";
 
 export function createApiClient(auth) {
   async function request(path, options = {}) {
@@ -57,12 +60,12 @@ export function createApiClient(auth) {
   };
 }
 
-export async function uploadFileToPresignedUrl(uploadUrl, file) {
+export async function uploadFileToPresignedUrl(uploadUrl, file, contentType) {
   const response = await fetch(uploadUrl, {
     method: "PUT",
     body: file,
     headers: {
-      "Content-Type": file.type || "application/octet-stream",
+      "Content-Type": contentType || file.type || "application/octet-stream",
     },
   });
 

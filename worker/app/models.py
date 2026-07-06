@@ -12,6 +12,7 @@ class Base(DeclarativeBase):
 
 
 class DocumentStatus(str, enum.Enum):
+    PENDING_UPLOAD = "PENDING_UPLOAD"
     UPLOADED = "UPLOADED"
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
@@ -66,4 +67,3 @@ class ProcessingJob(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     document = relationship("Document", back_populates="processing_jobs")
-

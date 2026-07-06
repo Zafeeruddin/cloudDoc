@@ -34,6 +34,9 @@ def sanitize_filename(filename: str) -> str:
 
 
 def validate_upload_request(payload: InitUploadRequest, settings: Settings) -> None:
+    extension = os.path.splitext(payload.filename)[1].lower()
+    if extension not in settings.allowed_file_extensions:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported file extension")
     if payload.content_type not in settings.allowed_content_types:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported content type")
     if payload.size_bytes > settings.max_upload_size_bytes:
@@ -43,14 +46,16 @@ def validate_upload_request(payload: InitUploadRequest, settings: Settings) -> N
 def init_upload(db: Session, settings: Settings, user: UserContext, payload: InitUploadRequest) -> tuple[Document, str]:
     validate_upload_request(payload, settings)
     safe_filename = sanitize_filename(payload.filename)
+    document_id = uuid.uuid4()
     document = Document(
+        id=document_id,
         user_id=uuid.UUID(user.user_id),
         filename=safe_filename,
         content_type=payload.content_type,
         size_bytes=payload.size_bytes,
         s3_bucket=settings.aws_s3_bucket,
-        s3_key=f"documents/{user.user_id}/{uuid.uuid4()}/{safe_filename}",
-        status=DocumentStatus.UPLOADED,
+        s3_key=f"documents/{user.user_id}/{document_id}/{safe_filename}",
+        status=DocumentStatus.PENDING_UPLOAD,
     )
     db.add(document)
     db.commit()
@@ -88,6 +93,7 @@ def complete_upload(db: Session, settings: Settings, user: UserContext, payload:
     if active_job is not None:
         return document
 
+    document.status = DocumentStatus.UPLOADED
     document.upload_completed_at = datetime.now(UTC)
     document.error_message = None
     job = ProcessingJob(document_id=document.id, status=ProcessingJobStatus.QUEUED)

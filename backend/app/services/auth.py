@@ -23,7 +23,9 @@ def get_current_user(
     settings: Settings = Depends(get_settings),
     db: Session = Depends(get_db),
 ) -> UserContext:
-    if settings.auth_trust_headers and x_user_id and x_user_email:
+    if settings.auth_trust_headers:
+        if not x_user_id or not x_user_email:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing trusted identity headers")
         user_id = _normalize_user_id(x_user_id)
         email = x_user_email
         name = x_user_name
@@ -42,4 +44,3 @@ def get_current_user(
     db.commit()
 
     return UserContext(user_id=str(user_id), email=email, name=name)
-
