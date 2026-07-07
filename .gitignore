@@ -10,3 +10,5 @@ coverage/
 frontend/public/config.js
 terraform/.terraform/
 terraform/.terraform.lock.hcl
+infra/k8s/secret.yaml
+infra/k8s/configmap.yaml

@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: docops
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -14,10 +14,12 @@ spec:
         app: backend
     spec:
       serviceAccountName: backend-sa
+      imagePullSecrets:
+      - name: docker-secret
       containers:
         - name: backend
-          image: ghcr.io/example/docops-backend:latest
-          imagePullPolicy: IfNotPresent
+          image: docker.io/itszafeer/cloudoc-be
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
               name: http
@@ -35,13 +37,13 @@ spec:
               memory: 512Mi
           readinessProbe:
             httpGet:
-              path: /health
+              path: /api/health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 15
           livenessProbe:
             httpGet:
-              path: /health
+              path: /api/health
               port: http
             initialDelaySeconds: 20
             periodSeconds: 20

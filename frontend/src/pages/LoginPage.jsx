@@ -5,9 +5,9 @@ import { useAuth } from "../components/auth";
 export default function LoginPage() {
   const { isAuthenticated, login } = useAuth();
   const [userId, setUserId] = useState("00000000-0000-0000-0000-000000000001");
-  const [email, setEmail] = useState("demo@docops.local");
+  const [email, setEmail] = useState("demo@docops.dev");
   const [name, setName] = useState("Demo User");
-  const [token, setToken] = useState("docops:00000000-0000-0000-0000-000000000001:demo@docops.local:Demo User");
+  const [token, setToken] = useState("docops:00000000-0000-0000-0000-000000000001:demo@docops.dev:Demo User");
 
   if (isAuthenticated) {
     return <Navigate to="/documents" replace />;

@@ -39,7 +39,7 @@ class Settings(BaseSettings):
 
     auth_trust_headers: bool = False
     dev_user_id: str = "00000000-0000-0000-0000-000000000001"
-    dev_user_email: str = "demo@docops.local"
+    dev_user_email: str = "demo@docops.dev"
     dev_user_name: str = "Demo User"
     cors_allowed_origins: List[str] = Field(default_factory=lambda: ["http://localhost:5173"])
 

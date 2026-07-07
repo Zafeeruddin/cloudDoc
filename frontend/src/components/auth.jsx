@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 
 const STORAGE_KEY = "docops.auth";
 const DEFAULT_USER_ID = "00000000-0000-0000-0000-000000000001";
-const DEFAULT_EMAIL = "demo@docops.local";
+const DEFAULT_EMAIL = "demo@docops.dev";
 const DEFAULT_NAME = "Demo User";
 
 function buildToken(userId, email, name) {

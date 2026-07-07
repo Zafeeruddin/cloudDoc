@@ -4,7 +4,7 @@ metadata:
   name: frontend
   namespace: docops
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -13,10 +13,13 @@ spec:
       labels:
         app: frontend
     spec:
+      imagePullSecrets:
+      - name: docker-secret
       containers:
         - name: frontend
-          image: ghcr.io/example/docops-frontend:latest
-          imagePullPolicy: IfNotPresent
+          image: docker.io/itszafeer/cloudoc-fe
+
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               name: http
@@ -26,6 +29,11 @@ spec:
                 configMapKeyRef:
                   name: docops-config
                   key: VITE_API_BASE_URL
+            - name: DOCOPS_API_UPSTREAM
+              valueFrom:
+                configMapKeyRef:
+                  name: docops-config
+                  key: DOCOPS_API_UPSTREAM
           resources:
             requests:
               cpu: 100m

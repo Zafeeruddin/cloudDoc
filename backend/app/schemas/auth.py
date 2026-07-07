@@ -1,8 +1,7 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class UserContext(BaseModel):
     user_id: str
-    email: EmailStr
+    email: str
     name: str | None = None
-
